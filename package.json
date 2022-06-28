@@ -34,5 +34,8 @@
   },
   "exports": {
     "chaintypes": "src/chaintypes.ts"
+  },
+  "engine": {
+    "node": "^16.0.0"
   }
 }
