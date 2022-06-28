@@ -34,8 +34,5 @@
   },
   "exports": {
     "chaintypes": "src/chaintypes.ts"
-  },
-  "engines": {
-    "node": "14.19.3"
   }
 }
