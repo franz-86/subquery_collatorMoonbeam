@@ -21,7 +21,8 @@
   "resolutions": {
     "@polkadot/api": "8.8.2",
     "@polkadot/types": "8.8.2",
-    "@polkadot/util": "^8.0.0"
+    "@polkadot/util": "^8.0.0",
+    "ipfs-unixfs": "6.0.6"
   },
   "dependencies": {
     "moonbeam-types-bundle": "^2.0.3"
