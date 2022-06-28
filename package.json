@@ -1,0 +1,38 @@
+{
+  "name": "MoonbeamStakingIndexer",
+  "version": "1.0.0",
+  "description": "Collect staking info of a specific collator on Moonbeam",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "rm -rf dist && npm build",
+    "test": "jest",
+    "codegen": "./node_modules/.bin/subql codegen"
+  },
+  "homepage": "https://github.com/franz-86/subquery_collatorMoonbeam",
+  "repository": "https://github.com/franz-86/subquery_collatorMoonbeam",
+  "files": [
+    "dist",
+    "schema.graphql",
+    "project.yaml"
+  ],
+  "author": "Franz-86",
+  "license": "Apache-2.0",
+  "resolutions": {
+    "@polkadot/api": "8.8.2",
+    "@polkadot/types": "8.8.2",
+    "@polkadot/util": "^8.0.0"
+  },
+  "dependencies": {
+    "moonbeam-types-bundle": "^2.0.3"
+  },
+  "devDependencies": {
+    "@polkadot/api": "8.8.2",
+    "@subql/cli": "^0.16.2",
+    "@subql/types": "^0.14.0",
+    "typescript": "^4.4.4"
+  },
+  "exports": {
+    "chaintypes": "src/chaintypes.ts"
+  }
+}

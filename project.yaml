@@ -1,0 +1,62 @@
+specVersion: 0.2.0
+name: ALFASTAKE_indexer
+version: 1.0.0
+description: Collect staking info of a specific collator on Moonbeam
+repository: 'https://github.com/franz-86/subquery_collatorMoonbeam'
+schema:
+  file: ./schema.graphql
+network:
+  genesisHash: '0xfe58ea77779b7abda7da4ec526d14db9b1e9cd40a217c34892af80a9b332b76d'
+  #endpoint: 'wss://moonbeam.public.blastapi.io'
+  endpoint: 'wss://moonbeam.api.onfinality.io/public-ws'
+  dictionary: 'https://api.subquery.network/sq/subquery/moonbeam-dictionary'
+  chaintypes:
+    file: ./dist/chaintypes.js
+dataSources:
+  - kind: substrate/Runtime
+    startBlock: 35400
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: handleRewardEvent
+          kind: substrate/EventHandler
+          filter:
+            module: parachainStaking
+            method: Rewarded
+        - handler: handleDueRewardEvent
+          kind: substrate/EventHandler
+          filter:
+            module: parachainStaking
+            method: DelegatorDueReward
+        - handler: handleCollatorEvent
+          kind: substrate/EventHandler
+          filter:
+            module: parachainStaking
+            method: CollatorChosen
+        - handler: handleRevokeRequestEvent
+          kind: substrate/EventHandler
+          filter:
+            module: parachainStaking
+            method: DelegationRevocationScheduled
+        - handler: handleRevokedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: parachainStaking
+            method: DelegationRevoked
+        - handler: handleDecreaseRequestEvent
+          kind: substrate/EventHandler
+          filter:
+            module: parachainStaking
+            method: DelegationDecreaseScheduled
+        - handler: handleDecreasedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: parachainStaking
+            method: DelegationDecreased
+        - handler: handleIncreasedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: parachainStaking
+            method: DelegationIncreased
+        - handler: handleBlock
+          kind: substrate/BlockHandler
