@@ -1,0 +1,34 @@
+type Delegator @entity{
+  id: ID! #address
+  totalReward: BigInt!
+  lastRound: Int
+}
+
+type Round @entity{
+  id: ID! #string roundIndex
+  startBlock: Int!
+  timestamp: Date!
+  inCollatorPool: Boolean!
+  stakedAmount: BigInt #totalStaked
+  ownAmount: BigInt
+  aggregatedDelegatorsRewards: BigInt
+  collatorReward: BigInt
+  validatedBlocks: Int
+  minStakingReq: BigInt #minimum GLMR to be a nominator
+}
+
+type StakingReward @entity {
+# ! significa che il campo è obbligatorio
+  id: ID! #unique event identifier: blockNumber-eventIdx
+  amount: BigInt!
+  address: Delegator!
+  round: Round!
+}
+
+type DelegationRequest @entity {
+  id: ID! #unique event identifier: blockNumber-eventIdx
+  delegatorAddress: String!
+  action: String!
+  whenExecutable: Int #round index when the request will be executed
+  amount: BigInt
+}
