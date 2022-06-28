@@ -107,9 +107,14 @@ export async function handleBlock(block: SubstrateBlock): Promise<void> {
         round.startBlock = firstBlockInRound
         round.timestamp = block.timestamp
 
-        const info = await api.query.parachainStaking.topDelegations(targetADDR);
-        const res = info.toJSON()
-        round.minStakingReq = res['delegations'].slice(-1).map(a => BigInt(a.amount))
+        try {
+            const infoDelegations = await api.query.parachainStaking.topDelegations(targetADDR);
+            const res = infoDelegations.toJSON()
+            round.minStakingReq = res['delegations'].slice(-1).map(a => BigInt(a.amount))
+        } catch (e) {
+            logger.info("api.query.parachainStaking.topDelegations does not exists at this block")
+            round.minStakingReq = BigInt(-1)
+        }
     }
 
     let collator = await api.query.authorInherent.author()
