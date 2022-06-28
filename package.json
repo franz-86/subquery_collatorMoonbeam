@@ -36,6 +36,6 @@
     "chaintypes": "src/chaintypes.ts"
   },
   "engines": {
-    "node": "^16.0.0"
+    "node": "14.19.3"
   }
 }
