@@ -92,6 +92,7 @@ export async function handleRewardEvent(event: SubstrateEvent): Promise<void> {
                     record.addressId = account.toString()
                     record.amount = (reward as Balance).toBigInt();
                     record.roundId = roundIndex.toString()
+                    record.blockNumber = event.block.block.header.number.toNumber()
                     await record.save()
                 }
             }
@@ -124,6 +125,7 @@ export async function handleDueRewardEvent(event: SubstrateEvent): Promise<void>
             record.addressId = nominator.toString()
             record.amount = amount;
             record.roundId = roundIndex.toString()
+            record.blockNumber = event.block.block.header.number.toNumber()
             await record.save()
         }
     }
@@ -181,6 +183,7 @@ export async function handleRevokeRequestEvent(event: SubstrateEvent): Promise<v
         entity.delegatorAddress = delegator.toString()
         entity.action = 'revocationRequest'
         entity.whenExecutable = parseInt(executionRound.toString())
+        entity.blockNumber = event.block.block.header.number.toNumber()
         await entity.save()
     }
 }
@@ -194,6 +197,7 @@ export async function handleRevokedEvent(event: SubstrateEvent): Promise<void> {
         entity.delegatorAddress = delegator.toString()
         entity.action = 'revoked'
         entity.amount = (amount as Balance).toBigInt()
+        entity.blockNumber = event.block.block.header.number.toNumber()
         await entity.save()
     }
 }
@@ -208,6 +212,7 @@ export async function handleDecreaseRequestEvent(event: SubstrateEvent): Promise
         entity.action = 'decreaseRequest'
         entity.whenExecutable = parseInt(executionRound.toString())
         entity.amount = (amount as Balance).toBigInt()
+        entity.blockNumber = event.block.block.header.number.toNumber()
         await entity.save()
     }
 }
@@ -221,6 +226,7 @@ export async function handleDecreasedEvent(event: SubstrateEvent): Promise<void>
         entity.delegatorAddress = delegator.toString()
         entity.action = 'decreased'
         entity.amount = (amount as Balance).toBigInt()
+        entity.blockNumber = event.block.block.header.number.toNumber()
         await entity.save()
     }
 }
@@ -234,6 +240,7 @@ export async function handleIncreasedEvent(event: SubstrateEvent): Promise<void>
         entity.delegatorAddress = delegator.toString()
         entity.action = 'increased'
         entity.amount = (amount as Balance).toBigInt()
+        entity.blockNumber = event.block.block.header.number.toNumber()
         await entity.save()
     }
 }
