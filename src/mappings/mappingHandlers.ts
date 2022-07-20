@@ -7,7 +7,6 @@ const blocksPerRound = 1800
 var collatorAddr = ''
 var prevBlock = -1
 var currentRound = -1
-var firstBlockInRound = -2000
 
 export async function handleCollatorEvent(event: SubstrateEvent): Promise<void> {
     const { event: { data: [round, account, staked] } } = event;
@@ -15,7 +14,6 @@ export async function handleCollatorEvent(event: SubstrateEvent): Promise<void> 
     let entity = await Round.get(round.toString());
     if (entity === undefined) {
         let info = (await api.query.parachainStaking.round()).toJSON()
-        firstBlockInRound = info['first']
         entity = new Round(round.toString())
         entity.inCollatorPool = false
         entity.validatedBlocks = 0
@@ -132,25 +130,13 @@ export async function handleDueRewardEvent(event: SubstrateEvent): Promise<void>
 }
 
 export async function handleBlock(block: SubstrateBlock): Promise<void> {
+    let info = (await api.query.parachainStaking.round()).toJSON()
+    currentRound = info['current']
+    let firstBlockInRound = info['first']
     let blockNum = block.block.header.number.toNumber()
     let round;
-    if (blockNum >= firstBlockInRound && blockNum < firstBlockInRound + blocksPerRound) { //Round entity should already exist 
-        round = await Round.get(currentRound.toString())
-        if (round === undefined) {
-            logger.info('\nError while accessing Round ', currentRound.toString(), ' entity')
-            logger.info('\nBlock number: ', blockNum.toString())
-        }
-    }
-    else { //create new Round entity
-        if (currentRound === -1) {
-            let info = (await api.query.parachainStaking.round()).toJSON()
-            currentRound = info['current']
-            firstBlockInRound = info['first']
-        }
-        else {
-            currentRound++
-            firstBlockInRound += 1800
-        }
+    round = await Round.get(currentRound.toString())
+    if (round === undefined) { //create new Round entity
         round = new Round(currentRound.toString())
         round.inCollatorPool = false
         round.validatedBlocks = 0
@@ -168,8 +154,10 @@ export async function handleBlock(block: SubstrateBlock): Promise<void> {
     }
 
     let collator = await api.query.authorInherent.author()
-    if (collator.toString() === targetADDR)
+    if (collator.toString() === targetADDR) {
         round.validatedBlocks++
+        round.inCollatorPool = true
+    }
 
     await round.save()
 }
